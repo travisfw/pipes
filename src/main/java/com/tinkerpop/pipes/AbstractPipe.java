@@ -24,26 +24,19 @@ import java.util.NoSuchElementException;
  */
 public abstract class AbstractPipe<S, E> implements Pipe<S, E> {
 
-    protected Iterator<S> starts;
+    protected QueueReads<S> starts;
     private E nextEnd;
     protected E currentEnd;
     private boolean available = false;
     protected boolean pathEnabled = false;
 
-    public void setStarts(final Iterator<S> starts) {
+    @Override
+    public void setStarts(final QueueReads<S> starts) {
         if (starts instanceof Pipe) {
             this.starts = starts;
         } else {
             this.starts = new HistoryIterator<S>(starts);
         }
-    }
-
-    public void setStarts(final Iterable<S> starts) {
-        this.setStarts(starts.iterator());
-    }
-
-    public void setStarts(final Pipe<?, S> starts) {
-        this.setStarts(starts.iterator());
     }
 
     public void reset() {
@@ -99,16 +92,6 @@ public abstract class AbstractPipe<S, E> implements Pipe<S, E> {
         this.pathEnabled = enable;
         if (this.starts instanceof Pipe)
             ((Pipe) this.starts).enablePath(enable);
-    }
-
-    /**
-     * The iterator method of Iterable is not faithful to the Java semantics of iterator().
-     * This method simply returns the pipe itself (which is an iterator) and thus, is useful only for foreach iteration.
-     *
-     * @return the pipe from the perspective of an iterator
-     */
-    public Iterator<E> iterator() {
-        return this;
     }
 
     public String toString() {

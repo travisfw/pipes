@@ -1,6 +1,5 @@
 package com.tinkerpop.pipes;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,14 +19,7 @@ public interface Pipe<S, E> extends QueueWrites<S>, QueueReads<E> {
      *
      * @param starts the iterator of incoming objects
      */
-    public void setStarts(Iterator<S> starts);
-
-    /**
-     * Set an iterable of S objects to the head (start) of the pipe.
-     *
-     * @param starts the iterable of incoming objects
-     */
-    public void setStarts(Iterable<S> starts);
+    public void setStarts(QueueReads<S> starts);
 
     /**
      * Returns the transformation path to arrive at the current object of the pipe.
