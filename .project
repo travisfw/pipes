@@ -1,15 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-  <name>pipes</name>
-  <comment>Pipes is a dataflow framework written in Java that enables the splitting, merging, filtering, and
+	<name>pipes</name>
+	<comment>Pipes is a dataflow framework written in Java that enables the splitting, merging, filtering, and
         transformation of data from input to output.
         Computations are expressed using a combinator model and are evaluated in a memory-efficient, lazy fashion. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
-  <projects/>
-  <buildSpec>
-    <buildCommand>
-      <name>org.eclipse.jdt.core.javabuilder</name>
-    </buildCommand>
-  </buildSpec>
-  <natures>
-    <nature>org.eclipse.jdt.core.javanature</nature>
-  </natures>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
 </projectDescription>
