@@ -4,6 +4,7 @@ import com.tinkerpop.pipes.util.PipeHelper;
 import com.tinkerpop.pipes.util.iterators.HistoryIterator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -40,17 +41,20 @@ public abstract class AbstractPipe<S, E> implements Pipe<S, E> {
     }
 
     public void reset() {
-        if (this.starts instanceof Pipe)
-            ((Pipe) this.starts).reset();
+        if (this.starts instanceof Pipe) {
+            @SuppressWarnings("unchecked")
+            Pipe<?, S> p = (Pipe<?, S>) this.starts;
+            p.reset();
+        }
 
         this.nextEnd = null;
         this.currentEnd = null;
         this.available = false;
     }
 
-    public List getCurrentPath() {
+    public List<E> getCurrentPath() {
         if (this.pathEnabled) {
-            final List pathElements = getPathToHere();
+            final List<E> pathElements = getPathToHere();
             final int size = pathElements.size();
             // do not repeat filters as they dup the object
             if (size == 0 || pathElements.get(size - 1) != this.currentEnd) {
@@ -62,11 +66,8 @@ public abstract class AbstractPipe<S, E> implements Pipe<S, E> {
         }
     }
 
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    public E next() {
+    @Override
+    public E remove() {
         if (this.available) {
             this.available = false;
             return (this.currentEnd = this.nextEnd);
@@ -90,8 +91,12 @@ public abstract class AbstractPipe<S, E> implements Pipe<S, E> {
 
     public void enablePath(final boolean enable) {
         this.pathEnabled = enable;
-        if (this.starts instanceof Pipe)
-            ((Pipe) this.starts).enablePath(enable);
+        if (this.starts instanceof Pipe) {
+            @SuppressWarnings("unchecked")
+            Pipe<?, S> p = (Pipe<?, S>) this.starts;
+            p.enablePath(enable);
+        }
+        else throw new IllegalStateException("this.starts is not a Pipe");
     }
 
     public String toString() {
@@ -100,18 +105,37 @@ public abstract class AbstractPipe<S, E> implements Pipe<S, E> {
 
     protected abstract E processNextStart() throws NoSuchElementException;
 
-    protected List getPathToHere() {
+    protected List<E> getPathToHere() {
         if (this.starts instanceof Pipe) {
-            return ((Pipe) this.starts).getCurrentPath();
+            @SuppressWarnings("unchecked")
+            Pipe<?, E> p = (Pipe<?, E>) this.starts;
+            return p.getCurrentPath();
         } else if (this.starts instanceof HistoryIterator) {
-            final List list = new ArrayList();
-            list.add(((HistoryIterator) this.starts).getLast());
+            final List<E> list = new ArrayList<E>();
+            list.add((E) ((HistoryIterator) this.starts).getLast());
             return list;
         } else {
-            return new ArrayList();
+            return new ArrayList<E>();
         }
     }
 
+
+    @Override
+    public int drainTo(final Collection<? super E> c) {
+        return drainTo(c, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int drainTo(Collection<? super E> c, int maxElements) {
+        int count = 0;
+        for (E i : this) {
+            if (count >= maxElements)
+                break;
+            c.add(i);
+            count++;
+        }
+        return count; // HA ha ha ha haaaa
+    }
 
 }
 

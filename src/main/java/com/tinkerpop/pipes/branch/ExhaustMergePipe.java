@@ -15,22 +15,22 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Marko A. Rodriguez (http://markorodriguez.com)
  */
-public class ExhaustMergePipe<S> extends AbstractMetaPipe<S, S> implements MetaPipe {
+public class ExhaustMergePipe<S> extends AbstractMetaPipe<S, S> implements MetaPipe<S> {
 
-    private final List<Pipe> pipes;
+    private final List<Pipe<?, S>> pipes;
     int current = 0;
     final int total;
 
-    public ExhaustMergePipe(final List<Pipe> pipes) {
+    public ExhaustMergePipe(final List<Pipe<?, S>> pipes) {
         this.pipes = pipes;
         this.total = pipes.size();
     }
 
     public S processNextStart() {
         while (true) {
-            final Pipe pipe = this.pipes.get(this.current);
-            if (pipe.peek()) {
-                return (S) pipe.next();
+            final Pipe<?, S> pipe = this.pipes.get(this.current);
+            if (pipe.peek() != null) {
+                return (S) pipe.take();
             } else {
                 this.current = (this.current + 1) % this.total;
                 if (this.current == 0) {
@@ -47,7 +47,7 @@ public class ExhaustMergePipe<S> extends AbstractMetaPipe<S, S> implements MetaP
             throw new RuntimeException(Pipe.NO_PATH_MESSAGE);
     }
 
-    public List<Pipe> getPipes() {
+    public List<Pipe<?, S>> getPipes() {
         return this.pipes;
     }
 
@@ -55,39 +55,4 @@ public class ExhaustMergePipe<S> extends AbstractMetaPipe<S, S> implements MetaP
         return PipeHelper.makePipeString(this, this.pipes);
     }
 
-    @Override
-    public S take() throws InterruptedException {
-        // TODO Auto-generated method stub
-        throw new Error("unimplemented");
-    }
-
-    @Override
-    public S poll(long timeout, TimeUnit unit) throws InterruptedException {
-        // TODO Auto-generated method stub
-        throw new Error("unimplemented");
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        // TODO Auto-generated method stub
-        throw new Error("unimplemented");
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        // TODO Auto-generated method stub
-        throw new Error("unimplemented");
-    }
-
-    @Override
-    public int drainTo(Collection<? super S> c) {
-        // TODO Auto-generated method stub
-        throw new Error("unimplemented");
-    }
-
-    @Override
-    public int drainTo(Collection<? super S> c, int maxElements) {
-        // TODO Auto-generated method stub
-        throw new Error("unimplemented");
-    }
 }

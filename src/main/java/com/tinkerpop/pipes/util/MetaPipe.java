@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Marko A. Rodriguez (http://markorodriguez.com)
  */
-public interface MetaPipe {
+public interface MetaPipe<S> {
 
-    public List<Pipe> getPipes();
+    public List<Pipe<?, S>> getPipes();
 }

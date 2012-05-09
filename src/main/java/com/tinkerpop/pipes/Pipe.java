@@ -10,7 +10,7 @@ import java.util.List;
  * @author Marko A. Rodriguez (http://markorodriguez.com)
  * @author Darrick Wiebe (darrick@innatesoftware.com)
  */
-public interface Pipe<S, E> extends QueueWrites<S>, QueueReads<E> {
+public interface Pipe<S, E> extends QueueReads<E> {
 
     public static final String NO_PATH_MESSAGE = "Path calculations are not enabled";
 
@@ -26,7 +26,7 @@ public interface Pipe<S, E> extends QueueWrites<S>, QueueReads<E> {
      *
      * @return a List of all of the objects traversed for the current iterator position of the pipe.
      */
-    public List getCurrentPath();
+    public List<E> getCurrentPath();
 
     /**
      * Calculating paths can be an expensive operation for some pipes.

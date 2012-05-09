@@ -17,10 +17,12 @@ public class HistoryIterator<T> implements Iterator<T> {
         this.iterator = iterator;
     }
 
+    @Override
     public boolean hasNext() {
         return this.iterator.hasNext();
     }
 
+    @Override
     public T next() {
         this.last = this.iterator.next();
         return last;
@@ -30,6 +32,7 @@ public class HistoryIterator<T> implements Iterator<T> {
         return this.last;
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

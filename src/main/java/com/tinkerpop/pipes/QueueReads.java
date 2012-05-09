@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * @param <E>
  */
-public interface QueueReads<E> {
+public interface QueueReads<E> extends Iterable<E> {
 
     /**
      * Retrieves and removes the head of this queue, waiting if necessary
